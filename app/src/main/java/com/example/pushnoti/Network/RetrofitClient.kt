@@ -2,11 +2,18 @@ package com.example.pushnoti.Network
 
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.logging.HttpLoggingInterceptor
+
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitClient {
-    private val client = OkHttpClient.Builder().build()
+    private val client = OkHttpClient.Builder()
+        .addInterceptor(HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        })
+        .build()
+
     val retrofit = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
     //    http://192.168.100.212:1337/api/auth/local/register
@@ -28,4 +35,5 @@ object RetrofitClient {
     .build()
 
     val response = client.newCall(request).execute() **/
+
 }

@@ -8,8 +8,9 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pushnoti.R
+import com.example.pushnoti.model.pageresponse.paginationdata
 
-class MyDataAdapter : PagingDataAdapter<com.example.pushnoti.model.response.Result, MyDataViewHolder>(MyDataDiffCallback()) {
+class MyDataAdapter : PagingDataAdapter<com.example.pushnoti.model.pageresponse.Result, MyDataViewHolder>(MyDataDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyDataViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.pageitem, parent, false)
@@ -18,26 +19,23 @@ class MyDataAdapter : PagingDataAdapter<com.example.pushnoti.model.response.Resu
 
     override fun onBindViewHolder(holder: MyDataViewHolder, position: Int) {
         val item = getItem(position)
-        item?.let {
-            holder.bind(it)
-        }
+        holder.itemView.findViewById<TextView>(R.id.itemname).setText(item!!.email)
+
     }
 }
 
 class MyDataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val nameTextView: TextView = itemView.findViewById(R.id.itemname)
 
-    fun bind(myData: com.example.pushnoti.model.response.Result) {
-        nameTextView.text = myData.gender
-    }
+
 }
 
-class MyDataDiffCallback : DiffUtil.ItemCallback<com.example.pushnoti.model.response.Result>() {
-    override fun areItemsTheSame(oldItem: com.example.pushnoti.model.response.Result, newItem: com.example.pushnoti.model.response.Result): Boolean {
+class MyDataDiffCallback : DiffUtil.ItemCallback<com.example.pushnoti.model.pageresponse.Result>() {
+    override fun areItemsTheSame(oldItem: com.example.pushnoti.model.pageresponse.Result, newItem: com.example.pushnoti.model.pageresponse.Result): Boolean {
         return oldItem.id == newItem.id
     }
 
-    override fun areContentsTheSame(oldItem: com.example.pushnoti.model.response.Result, newItem: com.example.pushnoti.model.response.Result): Boolean {
+    override fun areContentsTheSame(oldItem:com.example.pushnoti.model.pageresponse.Result, newItem:com.example.pushnoti.model.pageresponse.Result): Boolean {
         return oldItem == newItem
     }
 }

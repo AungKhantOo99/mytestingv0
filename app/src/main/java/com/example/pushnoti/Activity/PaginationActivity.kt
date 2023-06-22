@@ -13,23 +13,22 @@ import androidx.paging.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.pushnoti.Adapter.MyDataAdapter
 import com.example.pushnoti.databinding.ActivityPaginationBinding
+import com.example.pushnoti.model.pageresponse.paginationdata
 import com.example.pushnoti.pagination.MyPagingSource
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.cache
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.collect
 
 class PaginationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPaginationBinding
-    private var myadapter= MyDataAdapter()
+    private lateinit var myadapter:MyDataAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPaginationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        myadapter=MyDataAdapter()
         binding.pagiantion.layoutManager=LinearLayoutManager(this)
         binding.pagiantion.adapter=myadapter
         val pagingSource = MyPagingSource() // Create an instance of your PagingSource
@@ -39,11 +38,11 @@ class PaginationActivity : AppCompatActivity() {
             pagingSource
         }
 
-        val pagingDataFlow: Flow<PagingData<com.example.pushnoti.model.response.Result>> = pager.flow.cachedIn(lifecycleScope)
+        val pagingDataFlow: Flow<PagingData<com.example.pushnoti.model.pageresponse.Result>> = pager.flow.cachedIn(lifecycleScope)
         lifecycleScope.launch {
-                pagingDataFlow.collectLatest { pagingData ->
+                pagingDataFlow.collect{ pagingData ->
+                    binding.loading.visibility=View.GONE
                 myadapter.submitData(pagingData)
-                binding.loading.visibility=View.GONE
                 Log.d("Showdata",pagingData.toString())
             }
         }
